@@ -6,7 +6,9 @@
 //
 
 import UIKit
+
 private let reuseIdentifier = "cvID"
+
 class PokedexController: UICollectionViewController{
     //MARK: - Properties
     
@@ -15,13 +17,13 @@ class PokedexController: UICollectionViewController{
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         configureUI()
     }
+
     
     //MARK: - Helpers
     private func configureUI(){
         collectionView.backgroundColor = .white
-        navigationController?.navigationBar.backgroundColor = .mainPink()
-        navigationController?.navigationBar.barStyle = .black
-        navigationController?.navigationBar.isTranslucent = false
+//        navigationController?.navigationBar.backgroundColor = .mainPink()
+//        navigationController?.navigationBar.barStyle = .black
         navigationItem.title = "Pokédex"
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(handleSearchTapped))
@@ -42,7 +44,20 @@ extension PokedexController{
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PokedexCell
+        cell.backgroundColor = .systemGroupedBackground
         return cell
         
+    }
+}
+
+//MARK: - CollectionViewLayout
+extension PokedexController: UICollectionViewDelegateFlowLayout{
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 32, left: 8, bottom: 8, right: 8)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (view.frame.width - 36) / 3
+        return CGSize(width: width, height: width)
     }
 }
