@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Pokemon: Codable{
+class Pokemon{
     var name: String?
     var imageUrl: String?
     var image: UIImage?

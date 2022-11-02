@@ -44,6 +44,11 @@ extension UIView{
         translatesAutoresizingMaskIntoConstraints = false
         centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
+    
+    func anchorSize(to view: UIView){
+        widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+    }
 }
 
 extension UITextField{

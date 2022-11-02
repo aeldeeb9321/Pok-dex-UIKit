@@ -11,21 +11,33 @@ private let reuseIdentifier = "cvID"
 
 class PokedexController: UICollectionViewController{
     //MARK: - Properties
+    private var pokemon = [Pokemon]()
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         configureUI()
+        fetchPokemon()
     }
 
+    //MARK: - API
+    
+    private func fetchPokemon(){
+        Service.shared.fetchPokemon { (pokemon) in
+            self.pokemon = pokemon
+            DispatchQueue.main.async {
+                //if you dont do this your cv will be blank since the cv is initialized before the network call is complete
+                self.collectionView.reloadData()
+            }
+            
+        }
+        print(pokemon.count)
+    }
     
     //MARK: - Helpers
     private func configureUI(){
         collectionView.backgroundColor = .white
-//        navigationController?.navigationBar.backgroundColor = .mainPink()
-//        navigationController?.navigationBar.barStyle = .black
         navigationItem.title = "Pokédex"
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(handleSearchTapped))
         navigationItem.rightBarButtonItem?.tintColor = .white
         
@@ -40,10 +52,11 @@ class PokedexController: UICollectionViewController{
 //MARK: - Extension
 extension PokedexController{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return pokemon.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PokedexCell
+        cell.pokemon = pokemon[indexPath.item]
         cell.backgroundColor = .systemGroupedBackground
         return cell
         

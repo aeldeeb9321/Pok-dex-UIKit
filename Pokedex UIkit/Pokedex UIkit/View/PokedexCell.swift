@@ -6,14 +6,24 @@
 //
 
 import UIKit
+import SDWebImage
 
 class PokedexCell: UICollectionViewCell{
     //MARK: - Properties
+    var pokemon: Pokemon? {
+        didSet{
+            pokemonLabel.text = pokemon?.name
+            if let imageUrlString = pokemon?.imageUrl{
+                let url = URL(string: imageUrlString)
+                imageView.sd_setImage(with: url)
+            }
+            
+        }
+    }
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .systemGroupedBackground
         iv.contentMode = .scaleAspectFit
-        iv.image = UIImage(systemName: "magicmouse.fill")
         return iv
     }()
     
@@ -49,5 +59,15 @@ class PokedexCell: UICollectionViewCell{
         imageView.anchor(top: topAnchor, leading: leadingAnchor, trailing: trailingAnchor)
         addSubview(nameContainerView)
         nameContainerView.anchor(top:imageView.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor)
+        
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        self.addGestureRecognizer(longPressGestureRecognizer)
+    }
+    
+    //MARK: - Selectors
+    @objc private func handleLongPress(sender: UILongPressGestureRecognizer){
+        if sender.state == .began{
+            print("Handle showing pokemon summary view")
+        }
     }
 }
