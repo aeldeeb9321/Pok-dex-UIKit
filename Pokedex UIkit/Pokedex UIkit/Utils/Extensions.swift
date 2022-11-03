@@ -40,9 +40,9 @@ extension UIView{
         centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    func centerY(inView view: UIView){
+    func centerY(inView view: UIView, contstant: CGFloat = 0){
         translatesAutoresizingMaskIntoConstraints = false
-        centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -contstant).isActive = true
     }
     
     func anchorSize(to view: UIView){
@@ -101,7 +101,7 @@ extension UIButton{
         button.backgroundColor = buttonColor
         
         if isRounded{
-            button.layer.cornerRadius = 12
+            button.layer.cornerRadius = 8
         }
         
         return button

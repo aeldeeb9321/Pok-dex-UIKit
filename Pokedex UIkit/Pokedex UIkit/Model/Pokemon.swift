@@ -7,10 +7,10 @@
 
 import UIKit
 
-class Pokemon{
+class Pokemon: Codable{
     var name: String?
     var imageUrl: String?
-    var image: UIImage?
+    //var image: UIImage?
     var id: Int?
     var weight: Int?
     var height: Int?
@@ -29,10 +29,10 @@ class Pokemon{
         if let imageUrl = dictionary["imageUrl"] as? String{
             self.imageUrl = imageUrl
         }
-        if let image = dictionary["image"] as? UIImage{
-            self.image = image
-
-        }
+//        if let image = dictionary["image"] as? UIImage{
+//            self.image = image
+//
+//        }
         if let type = dictionary["type"] as? String{
             self.type = type
         }

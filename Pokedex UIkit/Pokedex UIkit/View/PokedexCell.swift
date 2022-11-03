@@ -60,14 +60,15 @@ class PokedexCell: UICollectionViewCell{
         addSubview(nameContainerView)
         nameContainerView.anchor(top:imageView.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor)
         
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        self.addGestureRecognizer(longPressGestureRecognizer)
+//        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+//        self.addGestureRecognizer(longPressGestureRecognizer)
     }
     
     //MARK: - Selectors
-    @objc private func handleLongPress(sender: UILongPressGestureRecognizer){
-        if sender.state == .began{
-            print("Handle showing pokemon summary view")
-        }
-    }
+//    @objc private func handleLongPress(sender: UILongPressGestureRecognizer){
+//        if sender.state == .began{
+//            print("Handle showing pokemon summary view")
+//        }
+//    }
 }
+
