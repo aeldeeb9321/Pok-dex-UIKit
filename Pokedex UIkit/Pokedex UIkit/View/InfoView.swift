@@ -9,26 +9,30 @@ import UIKit
 import SDWebImage
 
 protocol InfoViewDelegate: AnyObject{
-    func presentMoreInfo()
-}
+    func presentMoreInfo(withPokemon pokemon: Pokemon?)
+}  
 class InfoView: UIView{
     //MARK: - Propeties
     var pokemon: Pokemon? {
         didSet{
-            self.pokemonNameTitleLabel.text = pokemon?.name
-            self.typeLabel.text = "Type: \(pokemon?.type ?? "x")"
-            self.pokedexIdLabel.text = "Pokedex ID: \(pokemon?.id ?? 0)"
-            if let height = pokemon?.height{
-                self.heightLabel.text = "Height: \(Float(height) / 10.0) m"
-            }
+            guard let pokemon = pokemon else{return}
+            guard let type = pokemon.type else{return}
+            guard let defense = pokemon.defense else{return}
+            guard let attack = pokemon.attack else{return}
+            guard let id = pokemon.id else{return}
+            guard let height = pokemon.height else{return}
+            guard let weight = pokemon.weight else{return}
             
-            if let weight = pokemon?.weight{
-                self.weightLabel.text = "Weight: \(weight / 10) kg"
-            }
+            //get this working -> pokemonImageView.image = pokemon.image
+            self.pokemonNameTitleLabel.text = pokemon.name
+            configLabel(label: typeLabel, title: "Type: ", details: type)
+            configLabel(label: pokedexIdLabel, title: "Pokedex ID: ", details: "\(id)")
+            configLabel(label: attackLabel, title: "Attack: ", details: "\(attack)")
+            configLabel(label: defenseLabel, title: "Defense: ", details: "\(defense)")
+            configLabel(label: heightLabel, title: "Height: ", details: "\(Float(height) / 10.0) m")
+            configLabel(label: weightLabel, title: "Weight: ", details: "\(weight / 10) kg")
             
-            self.attackLabel.text = "Attack: \(pokemon?.attack ?? 0)"
-            self.defenseLabel.text = "Defense: \(pokemon?.defense ?? 0)"
-            if let imageUrlString = pokemon?.imageUrl{
+            if let imageUrlString = pokemon.imageUrl{
                 let url = URL(string: imageUrlString)
                 self.pokemonImageView.sd_setImage(with: url)
             }
@@ -43,7 +47,7 @@ class InfoView: UIView{
         return view
     }()
     private lazy var pokemonNameTitleLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "", textColor: .white, withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(textColor: .white, withFont: UIFont.systemFont(ofSize: 16))
         label.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
         return label
@@ -57,33 +61,33 @@ class InfoView: UIView{
     }()
     
     private lazy var typeLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "Type: ", textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var pokedexIdLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "Pokedex ID: ", textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel( textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
 
     
     private lazy var heightLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "Height: ", textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var weightLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "Weight: ", textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var attackLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "Attack: ", textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var defenseLabel: UILabel = {
-        let label = UILabel().makeLabel(withText: "Defense: ", textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
@@ -129,9 +133,17 @@ class InfoView: UIView{
         infoStack.anchor(top: pokemonImageView.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor, paddingTop: 5,paddingBottom: 5)
     }
     
-    
+    private func configLabel(label: UILabel, title: String, details: String){
+        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor: UIColor.mainPink()])
+        
+        attributedText.append(NSAttributedString(string: details, attributes: [.font : UIFont.systemFont(ofSize: 16), .foregroundColor: UIColor.label]))
+        
+        label.attributedText = attributedText
+    }
     //MARK: - Selectors
     @objc private func handleMoreInfoTapped(){
-        delegate?.presentMoreInfo()
+        //making sure the pokemon exists
+        guard let pokemon = self.pokemon else{return}
+        delegate?.presentMoreInfo(withPokemon: pokemon)
     }
 }

@@ -20,7 +20,7 @@ class PokedexController: UICollectionViewController{
     }()
     
     private lazy var blurEffect: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .light)
+        let blurEffect = UIBlurEffect(style: .dark)
         let view = UIVisualEffectView(effect: blurEffect)
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissInfoView)))
         return view
@@ -106,6 +106,7 @@ extension PokedexController{
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        //Passing in the pokemon at the celll into our infoView
         infoView.pokemon = pokemon[indexPath.item]
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
             self.infoView.isHidden = false
@@ -132,10 +133,23 @@ extension PokedexController: UICollectionViewDelegateFlowLayout{
 }
 
 extension PokedexController: InfoViewDelegate{
-    func presentMoreInfo() {
+    func presentMoreInfo(withPokemon pokemon: Pokemon?) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
+            self.infoView.alpha = 0
+            self.infoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
+            self.blurEffect.alpha = 0
+            
+        } completion: { _ in
+            self.infoView.isHidden = true
+            self.blurEffect.isHidden = true
+        }
+
         //present moreInfoVC
-        let moreInfoController = MoreInfoController()
-        navigationController?.pushViewController(moreInfoController, animated: true)
+        if let pokemon = pokemon{
+            let moreInfoController = MoreInfoController(pokemon: pokemon)
+            navigationController?.pushViewController(moreInfoController, animated: true)
+        }
+        
     }
     
     

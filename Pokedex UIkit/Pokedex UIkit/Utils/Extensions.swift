@@ -65,7 +65,7 @@ extension UITextField{
 }
 
 extension UILabel{
-    func makeLabel(withText text: String, textColor: UIColor, withFont font: UIFont) -> UILabel{
+    func makeLabel(withText text: String? = nil, textColor: UIColor, withFont font: UIFont) -> UILabel{
         let label = UILabel()
         label.text = text
         label.textColor = textColor
