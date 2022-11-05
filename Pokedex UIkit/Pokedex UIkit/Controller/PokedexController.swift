@@ -12,6 +12,16 @@ private let reuseIdentifier = "cvID"
 class PokedexController: UICollectionViewController{
     //MARK: - Properties
     private var pokemon = [Pokemon]()
+    private var filteredPokemon = [Pokemon]()
+    var inSearchMode = false //using this to determine whether we are searching, based on that we will tell our program which array to look at for our CV
+    
+    private lazy var searchBar: UISearchBar = {
+        let bar = UISearchBar()
+        bar.sizeToFit()
+        bar.delegate = self
+        bar.tintColor = .white
+        return bar
+    }()
     
     private lazy var infoView: InfoView = {
         let view = InfoView()
@@ -31,7 +41,7 @@ class PokedexController: UICollectionViewController{
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         configureUI()
         fetchPokemon()
-        print(view.frame.width)
+
     }
 
     //MARK: - API
@@ -52,7 +62,7 @@ class PokedexController: UICollectionViewController{
     private func configureUI(){
         collectionView.backgroundColor = .white
         navigationItem.title = "Pokédex"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(handleSearchTapped))
+        showSearchButton(shouldShow: true)
         navigationItem.rightBarButtonItem?.tintColor = .white
         
         collectionView.register(PokedexCell.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -73,33 +83,50 @@ class PokedexController: UICollectionViewController{
         
     }
     
+    private func showSearchButton(shouldShow: Bool){
+        if shouldShow{
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass")?.withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleSearchTapped))
+        }else{
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+    
+    private func search(shouldShow: Bool){
+        showSearchButton(shouldShow: !shouldShow)
+        searchBar.showsCancelButton = true
+        navigationItem.titleView = shouldShow ? searchBar: nil
+    }
     //MARK: - Selectors
     @objc private func handleSearchTapped(){
-        print("Searching")
+        search(shouldShow: true)
+        searchBar.becomeFirstResponder()
     }
     
     @objc private func handleDismissInfoView(){
+        dismssInfoView(pokemon: nil)
+    }
+    
+    private func dismssInfoView(pokemon: Pokemon?){
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
             self.infoView.alpha = 0
-            self.infoView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
+            self.infoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
             self.blurEffect.alpha = 0
             
         } completion: { _ in
             self.infoView.isHidden = true
             self.blurEffect.isHidden = true
         }
-        
-
     }
 }
-//MARK: - Extension
+
+//MARK: - CV datasource and delegate methods
 extension PokedexController{
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pokemon.count
+        return inSearchMode ? filteredPokemon.count: pokemon.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! PokedexCell
-        cell.pokemon = pokemon[indexPath.item]
+        cell.pokemon = inSearchMode ? filteredPokemon[indexPath.item]: pokemon[indexPath.item]
         cell.backgroundColor = .systemGroupedBackground
         return cell
         
@@ -132,17 +159,10 @@ extension PokedexController: UICollectionViewDelegateFlowLayout{
     }
 }
 
+//MARK: - InfoViewDelegate
 extension PokedexController: InfoViewDelegate{
     func presentMoreInfo(withPokemon pokemon: Pokemon?) {
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-            self.infoView.alpha = 0
-            self.infoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            self.blurEffect.alpha = 0
-            
-        } completion: { _ in
-            self.infoView.isHidden = true
-            self.blurEffect.isHidden = true
-        }
+        dismssInfoView(pokemon: pokemon)
 
         //present moreInfoVC
         if let pokemon = pokemon{
@@ -153,4 +173,38 @@ extension PokedexController: InfoViewDelegate{
     }
     
     
+}
+//MARK: - UISearchBarDelegate
+extension PokedexController: UISearchBarDelegate{
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        search(shouldShow: false)
+        searchBar.text = nil
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        //when the search icon is pressed
+        print("search bar began editing")
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        //when cancel is pressed
+        print("search bar did end editing")
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        //filtering our pokemon array based on search text
+        if searchText == "" || searchBar.text == nil{
+            inSearchMode = false
+            collectionView.reloadData()
+            view.endEditing(true)
+        }else{
+            inSearchMode = true
+            filteredPokemon = pokemon.filter({$0.name?.range(of: searchText.lowercased()) != nil})
+            collectionView.reloadData()
+//            filteredPokemon.forEach { pokemon in
+//                filteredPokemon.append(pokemon)
+//            }
+            
+        }
+        print("Search text is: \(searchText)")
+    }
 }

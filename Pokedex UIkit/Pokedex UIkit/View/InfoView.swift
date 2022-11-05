@@ -23,7 +23,6 @@ class InfoView: UIView{
             guard let height = pokemon.height else{return}
             guard let weight = pokemon.weight else{return}
             
-            //get this working -> pokemonImageView.image = pokemon.image
             self.pokemonNameTitleLabel.text = pokemon.name
             configLabel(label: typeLabel, title: "Type: ", details: type)
             configLabel(label: pokedexIdLabel, title: "Pokedex ID: ", details: "\(id)")
@@ -36,6 +35,7 @@ class InfoView: UIView{
                 let url = URL(string: imageUrlString)
                 self.pokemonImageView.sd_setImage(with: url)
             }
+            //Find a way to pass image from cell to infoView
         }
     }
     
