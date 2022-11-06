@@ -133,7 +133,7 @@ extension PokedexController{
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //Passing in the pokemon at the celll into our infoView
+        //Passing in the pokemon at the cell into our infoView
         infoView.pokemon = pokemon[indexPath.item]
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
             self.infoView.isHidden = false
@@ -143,6 +143,8 @@ extension PokedexController{
             self.blurEffect.isHidden = false
             self.blurEffect.alpha = 1
         }
+        
+        
 
     }
 }
@@ -163,12 +165,11 @@ extension PokedexController: UICollectionViewDelegateFlowLayout{
 extension PokedexController: InfoViewDelegate{
     func presentMoreInfo(withPokemon pokemon: Pokemon?) {
         dismssInfoView(pokemon: pokemon)
-
+        
         //present moreInfoVC
-        if let pokemon = pokemon{
-            let moreInfoController = MoreInfoController(pokemon: pokemon)
-            navigationController?.pushViewController(moreInfoController, animated: true)
-        }
+        let moreInfoController = MoreInfoController()
+        moreInfoController.pokemon = pokemon
+        navigationController?.pushViewController(moreInfoController, animated: true)
         
     }
     
@@ -179,6 +180,8 @@ extension PokedexController: UISearchBarDelegate{
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         search(shouldShow: false)
         searchBar.text = nil
+        inSearchMode = false
+        collectionView.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -198,6 +201,8 @@ extension PokedexController: UISearchBarDelegate{
             view.endEditing(true)
         }else{
             inSearchMode = true
+            
+            // Filtering pokemon who meet the requirement of their name containing the search texy
             filteredPokemon = pokemon.filter({$0.name?.range(of: searchText.lowercased()) != nil})
             collectionView.reloadData()
 //            filteredPokemon.forEach { pokemon in
