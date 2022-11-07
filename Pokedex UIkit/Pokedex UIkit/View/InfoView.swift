@@ -23,8 +23,8 @@ class InfoView: UIView{
             guard let height = pokemon.height else{return}
             guard let weight = pokemon.weight else{return}
             
-            self.pokemonNameTitleLabel.text = pokemon.name
-            configLabel(label: typeLabel, title: "Type: ", details: type)
+            self.pokemonNameTitleLabel.text = pokemon.name?.capitalized
+            configLabel(label: typeLabel, title: "Type: ", details: type.capitalized)
             configLabel(label: pokedexIdLabel, title: "Pokedex ID: ", details: "\(id)")
             configLabel(label: attackLabel, title: "Attack: ", details: "\(attack)")
             configLabel(label: defenseLabel, title: "Defense: ", details: "\(defense)")

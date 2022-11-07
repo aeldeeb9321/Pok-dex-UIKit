@@ -39,12 +39,12 @@ class MoreInfoController: UIViewController{
     private lazy var pokemonImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.setDimesions(height: 75, width: 75)
+        iv.setDimesions(height: 100, width: 100)
         return iv
     }()
     
     private lazy var pokemonDescription: UILabel = {
-        let label = UILabel().makeLabel(textColor: .label, withFont: UIFont.boldSystemFont(ofSize: 20))
+        let label = UILabel().makeLabel(textColor: .label, withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
@@ -79,6 +79,37 @@ class MoreInfoController: UIViewController{
         return label
     }()
     
+    private lazy var evoLabel: UILabel = {
+        let label = UILabel().makeLabel(withText: "Next Evolution: Charmeleon", textColor: .white, withFont: UIFont.systemFont(ofSize: 18))
+        return label
+    }()
+    
+    private lazy var evolutionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainPink()
+        view.addSubview(evoLabel)
+        evoLabel.centerY(inView: view)
+        evoLabel.centerX(inView: view)
+        view.setDimesions(height: 50, width: 0)
+        return view
+    }()
+    
+    private lazy var firstEvoImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.setDimesions(height: 120, width: 120)
+        iv.backgroundColor = .red
+        return iv
+    }()
+    
+    private lazy var secondEvoImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.setDimesions(height: 120, width: 120)
+        iv.backgroundColor = .red
+        return iv
+    }()
+    
     //MARK: - LifeCycle
     override func viewDidLoad() {
         view.backgroundColor = .mainPink()
@@ -88,12 +119,12 @@ class MoreInfoController: UIViewController{
     //MARK: - Helpers
     private func configureViewComponents(){
         view.backgroundColor = .white
-        let imageDescriptionStack = UIStackView(arrangedSubviews: [pokemonImageView, pokemonDescription])
-        imageDescriptionStack.axis = .horizontal
-        imageDescriptionStack.spacing = 6
-        imageDescriptionStack.distribution = .fillProportionally
-        view.addSubview(imageDescriptionStack)
-        imageDescriptionStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, paddingTop: 5, paddingLeading: 20, paddingTrailing: 20)
+        navigationController?.navigationBar.tintColor = .white
+        view.addSubview(pokemonImageView)
+        pokemonImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, paddingTop: 45, paddingLeading: 8)
+        view.addSubview(pokemonDescription)
+        pokemonDescription.centerY(inView: pokemonImageView)
+        pokemonDescription.anchor(leading: pokemonImageView.trailingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, paddingTop: 45, paddingLeading: 16, paddingTrailing: 4)
         
         let statVStack1 = UIStackView(arrangedSubviews: [typeLabel, heightLabel, weightLabel])
         statVStack1.axis = .vertical
@@ -104,12 +135,23 @@ class MoreInfoController: UIViewController{
         statVStack2.axis = .vertical
         statVStack2.spacing = 16
         statVStack2.distribution = .fillEqually
+        
         let hStatStack = UIStackView(arrangedSubviews: [statVStack1, statVStack2])
         hStatStack.axis = .horizontal
         hStatStack.distribution = .fillEqually
-        hStatStack.spacing = 10
+        hStatStack.spacing = 15
         view.addSubview(hStatStack)
-        hStatStack.anchor(top: imageDescriptionStack.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, paddingTop: 5, paddingLeading: 12, paddingTrailing: 3)
+        hStatStack.anchor(top: pokemonDescription.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, paddingTop: 35, paddingLeading: 12, paddingTrailing: 3)
+        
+        view.addSubview(evolutionView)
+        evolutionView.anchor(top: hStatStack.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, paddingTop: 25)
+        
+        let evolutionStack = UIStackView(arrangedSubviews: [firstEvoImageView, secondEvoImageView])
+        evolutionStack.axis = .horizontal
+        evolutionStack.spacing = 80
+        evolutionStack.distribution = .fillProportionally
+        view.addSubview(evolutionStack)
+        evolutionStack.anchor(top: evolutionView.bottomAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor, paddingTop: 35, paddingLeading: 32, paddingTrailing: 32)
     }
     
     private func configLabel(label: UILabel, title: String, details: String){
