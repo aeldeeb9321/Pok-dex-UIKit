@@ -12,12 +12,12 @@ class PokedexCell: UICollectionViewCell{
     //MARK: - Properties
     var pokemon: Pokemon? {
         didSet{
-            pokemonLabel.text = pokemon?.name
+            pokemonLabel.text = pokemon?.name?.capitalized
             if let imageUrlString = pokemon?.imageUrl{
                 let url = URL(string: imageUrlString)
                 imageView.sd_setImage(with: url)
             }
-            
+            nameContainerView.backgroundColor = pokemon?.backgroundColor
         }
     }
     private lazy var imageView: UIImageView = {
@@ -29,7 +29,6 @@ class PokedexCell: UICollectionViewCell{
     
     private lazy var nameContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .mainPink()
         view.addSubview(pokemonLabel)
         pokemonLabel.centerX(inView: view)
         pokemonLabel.centerY(inView: view)

@@ -36,39 +36,38 @@ class MoreInfoController: UIViewController{
     }()
     
     private lazy var typeLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var pokedexIdLabel: UILabel = {
-        let label = UILabel().makeLabel( textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
 
     
     private lazy var heightLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var weightLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var attackLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var defenseLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var evoLabel: UILabel = {
         let label = UILabel().makeLabel(withText: "Evolution Chain:", textColor: .white, withFont: UIFont.boldSystemFont(ofSize: 18))
-        
         return label
     }()
     
@@ -83,7 +82,7 @@ class MoreInfoController: UIViewController{
     private lazy var evolutionView: UIView = {
         let view = UIView()
         view.addSubview(evoLabel)
-        view.backgroundColor = .mainPink()
+        view.backgroundColor = pokemon.backgroundColor
         evoLabel.centerY(inView: view)
         evoLabel.centerX(inView: view)
         view.setDimesions(height: 50, width: 0)
@@ -99,10 +98,14 @@ class MoreInfoController: UIViewController{
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
-        view.backgroundColor = .mainPink()
         configureViewComponents()
         setupLabels()
         configureEvolutionChain()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.navigationBar.backgroundColor = pokemon.backgroundColor
     }
     
     //MARK: - Helpers
@@ -179,7 +182,7 @@ class MoreInfoController: UIViewController{
     }
     
     private func configLabel(label: UILabel, title: String, details: String){
-        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor: UIColor.mainPink()])
+        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor: pokemon.backgroundColor])
         
         attributedText.append(NSAttributedString(string: details, attributes: [.font : UIFont.systemFont(ofSize: 16), .foregroundColor: UIColor.label]))
         

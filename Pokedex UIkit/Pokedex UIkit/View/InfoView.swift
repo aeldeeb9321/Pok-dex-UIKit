@@ -23,7 +23,11 @@ class InfoView: UIView{
             guard let height = pokemon.height else{return}
             guard let weight = pokemon.weight else{return}
             
+            self.containerView.backgroundColor = pokemon.backgroundColor
+            self.moreInfoButton.backgroundColor = pokemon.backgroundColor
             self.pokemonNameTitleLabel.text = pokemon.name?.capitalized
+            self.typeLabel.textColor = pokemon.backgroundColor
+            self.pokedexIdLabel.textColor = pokemon.backgroundColor
             configLabel(label: typeLabel, title: "Type: ", details: type.capitalized)
             configLabel(label: pokedexIdLabel, title: "Pokedex ID: ", details: "\(id)")
             configLabel(label: attackLabel, title: "Attack: ", details: "\(attack)")
@@ -35,18 +39,14 @@ class InfoView: UIView{
                 let url = URL(string: imageUrlString)
                 self.pokemonImageView.sd_setImage(with: url)
             }
-            //Find a way to pass image from cell to infoView
-            
-            //evolutionChain
-            print(pokemon.evolutionChain)
+
         }
     }
     
     var delegate: InfoViewDelegate?
     
-    private let containerView: UIView = {
+    private lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .mainPink()
         return view
     }()
     private lazy var pokemonNameTitleLabel: UILabel = {
@@ -64,33 +64,33 @@ class InfoView: UIView{
     }()
     
     private lazy var typeLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var pokedexIdLabel: UILabel = {
-        let label = UILabel().makeLabel( textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel( withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
 
     
     private lazy var heightLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var weightLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var attackLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
     private lazy var defenseLabel: UILabel = {
-        let label = UILabel().makeLabel(textColor: .mainPink(), withFont: UIFont.systemFont(ofSize: 16))
+        let label = UILabel().makeLabel(withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
     
@@ -137,7 +137,7 @@ class InfoView: UIView{
     }
     
     private func configLabel(label: UILabel, title: String, details: String){
-        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor: UIColor.mainPink()])
+        let attributedText = NSMutableAttributedString(string: title, attributes: [.font : UIFont.boldSystemFont(ofSize: 16), .foregroundColor: pokemon?.backgroundColor ?? .mainPink()])
         
         attributedText.append(NSAttributedString(string: details, attributes: [.font : UIFont.systemFont(ofSize: 16), .foregroundColor: UIColor.label]))
         
