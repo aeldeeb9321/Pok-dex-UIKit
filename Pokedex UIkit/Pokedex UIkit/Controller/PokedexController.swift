@@ -158,7 +158,7 @@ extension PokedexController: UISearchBarDelegate{
         }else{
             inSearchMode = true
             
-            // Filtering pokemon who meet the requirement of their name containing the search texy
+            // Filtering pokemon who meet the requirement of their name containing the search text
             filteredPokemon = pokemon.filter({$0.name?.range(of: searchText.lowercased()) != nil})
             collectionView.reloadData()
         }

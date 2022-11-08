@@ -1,2 +1,2 @@
 # Pokedex-UIKit
-Creating a Pokedex app with UIKit full programatically. 
+Creating a Pokedex app with UIKit fully programatically. 

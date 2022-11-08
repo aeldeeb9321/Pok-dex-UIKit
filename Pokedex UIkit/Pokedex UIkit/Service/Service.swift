@@ -13,7 +13,7 @@ class Service{
     let session: URLSession = URLSession(configuration: .default)
     
     let BASE_URL = URL(string: "https://pokedex-bb36f.firebaseio.com/pokemon.json")
-    var pokeIdImages = [Int: Pokemon]()
+    var idToPokemon = [Int: Pokemon]()
     func fetchPokemon(completion: @escaping ([Pokemon],[Int: Pokemon]) -> ()){
         
         if let url = BASE_URL{
@@ -36,10 +36,10 @@ class Service{
                 if let pokemonData = try? decoder.decode([Pokemon].self, from: data){
                     for pokemon in pokemonData{
                         if let pokeId = pokemon.id{
-                            self.pokeIdImages[pokeId] = pokemon
+                            self.idToPokemon[pokeId] = pokemon
                         }
                     }
-                    completion(pokemonData, self.pokeIdImages)
+                    completion(pokemonData, self.idToPokemon)
                 }
                 
             }.resume()
