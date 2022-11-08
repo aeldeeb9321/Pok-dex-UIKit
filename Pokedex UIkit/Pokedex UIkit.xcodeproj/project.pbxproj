@@ -19,6 +19,7 @@
 		259A47E1290F9033009E47A0 /* PokedexCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259A47E0290F9033009E47A0 /* PokedexCell.swift */; };
 		259A48382910A6C7009E47A0 /* Pokemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259A48372910A6C7009E47A0 /* Pokemon.swift */; };
 		259A483A2910AA7C009E47A0 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259A48392910AA7C009E47A0 /* Service.swift */; };
+		25CF22112919D94600AE22C0 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CF22102919D94600AE22C0 /* InfoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		259A47E0290F9033009E47A0 /* PokedexCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexCell.swift; sourceTree = "<group>"; };
 		259A48372910A6C7009E47A0 /* Pokemon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pokemon.swift; sourceTree = "<group>"; };
 		259A48392910AA7C009E47A0 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
+		25CF22102919D94600AE22C0 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				259A47DC290F59F9009E47A0 /* PokedexController.swift */,
 				2587E9D5291344790005D465 /* MoreInfoController.swift */,
+				25CF22102919D94600AE22C0 /* InfoViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				259A47C4290F59A6009E47A0 /* AppDelegate.swift in Sources */,
 				2587E9D6291344790005D465 /* MoreInfoController.swift in Sources */,
 				259A483A2910AA7C009E47A0 /* Service.swift in Sources */,
+				25CF22112919D94600AE22C0 /* InfoViewController.swift in Sources */,
 				259A47DD290F59F9009E47A0 /* PokedexController.swift in Sources */,
 				259A47C6290F59A6009E47A0 /* SceneDelegate.swift in Sources */,
 				259A47DF290F5A78009E47A0 /* Extensions.swift in Sources */,

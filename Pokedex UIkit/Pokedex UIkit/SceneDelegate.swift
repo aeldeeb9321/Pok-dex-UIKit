@@ -19,7 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let layout = UICollectionViewFlowLayout()
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = UINavigationController(rootViewController: PokedexController(collectionViewLayout: layout))
+        let nc = UINavigationController(rootViewController: PokedexController(collectionViewLayout: layout))
+        window?.rootViewController = nc
         window?.makeKeyAndVisible()
     }
 

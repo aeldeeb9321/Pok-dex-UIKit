@@ -18,5 +18,15 @@ struct Pokemon: Codable{
     var description: String?
     var type: String?
     var baseExperience: Int?
+    var evolutionChain: [Evolution]?
 
+}
+
+struct Evolution: Codable{
+    let id: String
+    let name: String
+    
+    var getId: Int?{
+        return Int(id)
+    }
 }

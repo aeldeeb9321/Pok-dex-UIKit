@@ -13,6 +13,8 @@ class PokedexController: UICollectionViewController{
     //MARK: - Properties
     private var pokemon = [Pokemon]()
     private var filteredPokemon = [Pokemon]()
+    private var pokeDict = [Int: Pokemon]()
+//    private var evolutionImages = [
     var inSearchMode = false //using this to determine whether we are searching, based on that we will tell our program which array to look at for our CV
     
     private lazy var searchBar: UISearchBar = {
@@ -23,39 +25,27 @@ class PokedexController: UICollectionViewController{
         return bar
     }()
     
-    private lazy var infoView: InfoView = {
-        let view = InfoView()
-        view.delegate = self
-        return view
-    }()
-    
-    private lazy var blurEffect: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let view = UIVisualEffectView(effect: blurEffect)
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleDismissInfoView)))
-        return view
-    }()
+   
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
         collectionView.collectionViewLayout = UICollectionViewFlowLayout()
         configureUI()
         fetchPokemon()
-
     }
 
     //MARK: - API
     
     private func fetchPokemon(){
-        Service.shared.fetchPokemon { (pokemon) in
+        Service.shared.fetchPokemon { pokemon, pokeDict  in
             self.pokemon = pokemon
+            self.pokeDict = pokeDict
             DispatchQueue.main.async {
                 //if you dont do this your cv will be blank since the cv is initialized before the network call is complete
                 self.collectionView.reloadData()
             }
             
         }
-        print(pokemon.count)
     }
     
     //MARK: - Helpers
@@ -67,18 +57,7 @@ class PokedexController: UICollectionViewController{
         
         collectionView.register(PokedexCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
-        view.addSubview(infoView)
-        infoView.setDimesions(height: view.frame.width , width: view.frame.width - 64)
-        infoView.centerX(inView: view)
-        infoView.centerY(inView: view, contstant: 44)
-        infoView.isHidden = true
-        infoView.alpha = 0
-        infoView.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
         
-        view.insertSubview(blurEffect, belowSubview: infoView)
-        blurEffect.anchor(top: view.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, bottom: view.bottomAnchor, trailing: view.safeAreaLayoutGuide.trailingAnchor)
-        blurEffect.isHidden = true
-        blurEffect.alpha = 0
         
         
     }
@@ -102,21 +81,6 @@ class PokedexController: UICollectionViewController{
         searchBar.becomeFirstResponder()
     }
     
-    @objc private func handleDismissInfoView(){
-        dismssInfoView(pokemon: nil)
-    }
-    
-    private func dismssInfoView(pokemon: Pokemon?){
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-            self.infoView.alpha = 0
-            self.infoView.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            self.blurEffect.alpha = 0
-            
-        } completion: { _ in
-            self.infoView.isHidden = true
-            self.blurEffect.isHidden = true
-        }
-    }
 }
 
 //MARK: - CV datasource and delegate methods
@@ -134,18 +98,10 @@ extension PokedexController{
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         //Passing in the pokemon at the cell into our infoView
-        infoView.pokemon = pokemon[indexPath.item]
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut) {
-            self.infoView.isHidden = false
-            self.infoView.alpha = 1
-            self.infoView.transform = .identity
-            
-            self.blurEffect.isHidden = false
-            self.blurEffect.alpha = 1
-        }
-        
-        
-
+        let selectedPokemon = inSearchMode ? filteredPokemon[indexPath.item]: pokemon[indexPath.item]
+        let infoViewController = InfoViewController(delegate: self, pokemon: selectedPokemon)
+        //since we are handling animations we are making it false
+        present(infoViewController, animated: false)
     }
 }
 
@@ -164,11 +120,20 @@ extension PokedexController: UICollectionViewDelegateFlowLayout{
 //MARK: - InfoViewDelegate
 extension PokedexController: InfoViewDelegate{
     func presentMoreInfo(withPokemon pokemon: Pokemon?) {
-        dismssInfoView(pokemon: pokemon)
-        
+        dismiss(animated: false)
+        guard let pokemon = pokemon else{return}
+        var pokemonDict = [Int: String]()
+        for evolution in pokemon.evolutionChain ?? []{
+            if let id = evolution.getId{
+               pokemonDict[id] = pokeDict[id]?.imageUrl
+            }
+            
+        }
         //present moreInfoVC
-        let moreInfoController = MoreInfoController()
-        moreInfoController.pokemon = pokemon
+        let moreInfoController = MoreInfoController(pokeEvolutions: pokemonDict, pokemon: pokemon)
+        
+        
+        
         navigationController?.pushViewController(moreInfoController, animated: true)
         
     }
@@ -184,15 +149,6 @@ extension PokedexController: UISearchBarDelegate{
         collectionView.reloadData()
     }
     
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        //when the search icon is pressed
-        print("search bar began editing")
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        //when cancel is pressed
-        print("search bar did end editing")
-    }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         //filtering our pokemon array based on search text
         if searchText == "" || searchBar.text == nil{
@@ -205,11 +161,6 @@ extension PokedexController: UISearchBarDelegate{
             // Filtering pokemon who meet the requirement of their name containing the search texy
             filteredPokemon = pokemon.filter({$0.name?.range(of: searchText.lowercased()) != nil})
             collectionView.reloadData()
-//            filteredPokemon.forEach { pokemon in
-//                filteredPokemon.append(pokemon)
-//            }
-            
         }
-        print("Search text is: \(searchText)")
     }
 }

@@ -36,6 +36,9 @@ class InfoView: UIView{
                 self.pokemonImageView.sd_setImage(with: url)
             }
             //Find a way to pass image from cell to infoView
+            
+            //evolutionChain
+            print(pokemon.evolutionChain)
         }
     }
     

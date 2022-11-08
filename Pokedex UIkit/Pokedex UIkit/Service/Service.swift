@@ -13,9 +13,9 @@ class Service{
     let session: URLSession = URLSession(configuration: .default)
     
     let BASE_URL = URL(string: "https://pokedex-bb36f.firebaseio.com/pokemon.json")
-    
-    func fetchPokemon(completion: @escaping ([Pokemon]) -> ()){
-        //var pokemonArray: [Pokemon] = []
+    var pokeIdImages = [Int: Pokemon]()
+    func fetchPokemon(completion: @escaping ([Pokemon],[Int: Pokemon]) -> ()){
+        
         if let url = BASE_URL{
             session.dataTask(with: URLRequest(url: url)) { data, response, error in
                 if let error = error{
@@ -34,7 +34,12 @@ class Service{
                 guard let data = data?.parseData(removeString: "null,") else {return}
                 let decoder = JSONDecoder()
                 if let pokemonData = try? decoder.decode([Pokemon].self, from: data){
-                    completion(pokemonData)
+                    for pokemon in pokemonData{
+                        if let pokeId = pokemon.id{
+                            self.pokeIdImages[pokeId] = pokemon
+                        }
+                    }
+                    completion(pokemonData, self.pokeIdImages)
                 }
                 
             }.resume()
