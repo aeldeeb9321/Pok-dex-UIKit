@@ -34,6 +34,10 @@ class PokedexController: UICollectionViewController{
         fetchPokemon()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.backgroundColor = .mainPink()
+    }
     //MARK: - API
     
     private func fetchPokemon(){
