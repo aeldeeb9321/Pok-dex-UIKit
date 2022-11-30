@@ -35,11 +35,13 @@ class InfoView: UIView{
             configLabel(label: heightLabel, title: "Height: ", details: "\(Float(height) / 10.0) m")
             configLabel(label: weightLabel, title: "Weight: ", details: "\(weight / 10) kg")
             
-            if let imageUrlString = pokemon.imageUrl{
-                let url = URL(string: imageUrlString)
-                self.pokemonImageView.sd_setImage(with: url)
+            Service.shared.fetchImageData(pokemon: pokemon) { data, error in
+                if let data = data{
+                    DispatchQueue.main.async {
+                        self.pokemonImageView.image = UIImage(data: data)
+                    }
+                }
             }
-
         }
     }
     

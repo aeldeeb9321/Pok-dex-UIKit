@@ -60,10 +60,7 @@ class PokedexController: UICollectionViewController{
         navigationItem.rightBarButtonItem?.tintColor = .white
         
         collectionView.register(PokedexCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        
-        
-        
-        
+
     }
     
     private func showSearchButton(shouldShow: Bool){

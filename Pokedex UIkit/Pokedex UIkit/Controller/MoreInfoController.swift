@@ -140,9 +140,13 @@ class MoreInfoController: UIViewController{
         configLabel(label: weightLabel, title: "Weight: ", details: "\(weight / 10) kg")
         navigationItem.title = pokemon.name?.capitalized
         
-        if let imageUrlString = pokemon.imageUrl{
-            let url = URL(string: imageUrlString)
-            self.pokemonImageView.sd_setImage(with: url)
+        // FIXME: - add image
+        Service.shared.fetchImageData(pokemon: pokemon) { data, error in
+            if let data = data{
+                DispatchQueue.main.async {
+                    self.pokemonImageView.image = UIImage(data: data)
+                }
+            }
         }
     }
     private func configureViewComponents(){

@@ -6,18 +6,21 @@
 //
 
 import UIKit
-import SDWebImage
 
 class PokedexCell: UICollectionViewCell{
     //MARK: - Properties
     var pokemon: Pokemon? {
         didSet{
-            pokemonLabel.text = pokemon?.name?.capitalized
-            if let imageUrlString = pokemon?.imageUrl{
-                let url = URL(string: imageUrlString)
-                imageView.sd_setImage(with: url)
+            guard let pokemon = pokemon else{ return }
+            pokemonLabel.text = pokemon.name?.capitalized
+            nameContainerView.backgroundColor = pokemon.backgroundColor
+            Service.shared.fetchImageData(pokemon: pokemon) { data, error in
+                if let data = data{
+                    DispatchQueue.main.async {
+                        self.imageView.image = UIImage(data: data)
+                    }
+                }
             }
-            nameContainerView.backgroundColor = pokemon?.backgroundColor
         }
     }
     private lazy var imageView: UIImageView = {
@@ -38,6 +41,8 @@ class PokedexCell: UICollectionViewCell{
         let label = UILabel().makeLabel(withText: "Bulbasaur", textColor: .white, withFont: UIFont.systemFont(ofSize: 16))
         return label
     }()
+    
+   
     //MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
