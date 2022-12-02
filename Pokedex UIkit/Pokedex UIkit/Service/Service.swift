@@ -48,9 +48,39 @@ class Service{
         
     }
     
+//    func fetchData(completion: @escaping(Result<[Pokemon], Error>) -> ()){
+//        if let url = BASE_URL{
+//            session.dataTask(with: URLRequest(url: url)) { data, response, error in
+//                if let error = error{
+//                    completion(.failure(error))
+//                    return
+//                }
+//
+//                guard let response = response as? HTTPURLResponse else{return}
+//                guard(200...299).contains(response.statusCode) else{
+//                    assertionFailure()
+//                    print("Invalid response status code recieved \(response.statusCode)")
+//                    return
+//                }
+//
+//                guard let data = data?.parseData(removeString: "null,") else {return}
+//                let decoder = JSONDecoder()
+//                if let pokemonData = try? decoder.decode([Pokemon].self, from: data){
+//                    for pokemon in pokemonData{
+//                        if let pokeId = pokemon.id{
+//                            self.idToPokemon[pokeId] = pokemon
+//                        }
+//                    }
+//                    completion(.success(pokemonData))
+//
+//                }
+//
+//            }.resume()
+//        }
+//    }
     func fetchImageData(pokemon: Pokemon, completion: @escaping(Data?, Error?) -> ()){
         guard let url = URL(string: pokemon.imageUrl) else{ return }
-        
+  
         if let imageData = images.object(forKey: url.absoluteString as NSString){
             completion(imageData as Data, nil)
             return
